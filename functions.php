@@ -43,32 +43,21 @@ add_action( 'after_setup_theme', 'theme_setup' );
  * Enqueue scripts and styles
  */
 function theme_scripts() {
-	wp_enqueue_style( 'theme-style', get_template_directory_uri() . '/css/style.css' );
+	wp_register_style('normalize', get_template_directory_uri() . '/css/normalize.css', false, '2.1.2', 'all');
+	wp_register_style('theme_style', get_stylesheet_uri(), array( 'normalize' ), null);
+	wp_enqueue_style('theme_style');
 
-	wp_register_style('normalize', get_template_directory_uri() . '/css/normalize.css', array(), '2.1.2', 'all');
-	wp_enqueue_style('normalize');
+	// Load jQuery from Google CDN
+	if (!is_admin()) {
+		wp_deregister_script('jquery');
+		wp_register_script('jquery', "http" . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . "://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js", false, null, true);
+		wp_enqueue_script('jquery');
+	}
 
-	wp_register_script('library', get_template_directory_uri() . '/js/library.js', array(), false, true);
+	wp_register_script('library', get_template_directory_uri() . '/js/library.js', false, null, true);
 	wp_enqueue_script('library');
 }
 add_action( 'wp_enqueue_scripts', 'theme_scripts' );
-
-
-/**
- * Load another jquery version
- */
-function load_jquery() {
-	// only use this method if we're not in wp-admin
-	if ( ! is_admin() ) {
-		// deregister the original version of jQuery
-		wp_deregister_script('jquery');
-		// register it again, this time with no file path
-		wp_register_script('jquery', 'http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js', array(), '1.9.1'); // Google CDN jQuery
-		// add it back into the queue
-		wp_enqueue_script('jquery');
-	}
-}
-add_action('template_redirect', 'load_jquery');
 
 
 /**
