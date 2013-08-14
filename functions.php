@@ -107,17 +107,21 @@ add_filter( 'wp_title', 'theme_wp_title', 10, 2 );
  */
 function pagination() {
 	global $wp_query;
-    $big = 99999;
-	echo paginate_links(array(
-		'base' => str_replace($big, '%#%', get_pagenum_link($big)),
-		'format' => 'page/%#%/',
-		'current' => max(1, get_query_var('paged')),
-		'total' => $wp_query->max_num_pages,
-		'prev_next' => False,
-		'type' => 'list'
-	));
-}
+    $total_pages = $wp_query->max_num_pages;
 
+	if ($total_pages > 1) {
+	    $big = 99999999;
+		$list = paginate_links(array(
+			'base' => str_replace($big, '%#%', get_pagenum_link($big)),
+			'format' => 'page/%#%/',
+			'current' => max(1, get_query_var('paged')),
+			'total' => $total_pages,
+			'prev_next' => true,
+			'type' => 'list'
+		));
+		echo $list;
+	}
+}
 
 /**
  * Set the custom excerpt length
@@ -135,7 +139,7 @@ function custom_excerpt($length) {
 	if ($post->post_excerpt) {
 
 		add_filter( 'excerpt_length', 'custom_excerpt_length', 999 );
-		the_excerprt();
+		the_excerpt();
 
 	} else if ($post->post_content) {
 
