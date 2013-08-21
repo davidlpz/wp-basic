@@ -124,13 +124,6 @@ function pagination() {
 }
 
 /**
- * Set the custom excerpt length
- */
-function custom_excerpt_length( $length ) {
-	return $length;
-}
-
-/**
  * Custom excerpt
  */
 function custom_excerpt($length) {
@@ -138,20 +131,20 @@ function custom_excerpt($length) {
 
 	if ($post->post_excerpt) {
 
-		add_filter( 'excerpt_length', 'custom_excerpt_length', 999 );
-		the_excerpt();
+		$output = $post->post_excerpt;
 
 	} else if ($post->post_content) {
 
 		$output = strip_tags(get_the_content());
-		$array = explode(" ", $output, $length+1);
 
-		if (count($array) > $length) {
-			unset($array[$length]);
-			echo implode(" ", $array) . '...';
-		} else echo implode(" ", $array);
+	} else return;
 
-	}
+	$array = explode(" ", $output, $length+1);
+
+	if (count($array) > $length) {
+		unset($array[$length]);
+		echo implode(" ", $array) . '...';
+	} else echo implode(" ", $array);
 }
 
 
