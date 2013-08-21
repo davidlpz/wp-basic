@@ -4,14 +4,14 @@
 
 		<?php if ( has_post_thumbnail()) : ?>
 			<a href="<?php the_permalink(); ?>" title="<?php the_title(); ?>">
-				<?php the_post_thumbnail(array(120,120)); ?>
+				<?php the_post_thumbnail(array($width,$height)); // Set a size for the thumbnail ?>
 			</a>
 		<?php endif; ?>
 
 		<header class="entry-header">
-			<h1 class="entry-title">
+			<h2 class="entry-title">
 				<a href="<?php the_permalink(); ?>" title="<?php the_title(); ?>" rel="bookmark"><?php the_title(); ?></a>
-			</h1>
+			</h2>
 
 			<span class="date"><?php the_time('j/m/Y'); ?></span>
 			<span class="author"><?php _e( 'Published by' ); ?> <?php the_author_posts_link(); ?></span>
