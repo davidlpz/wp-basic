@@ -1,8 +1,54 @@
 /*
-Theme Name:       
-Theme URI:          
-Description:        
+Theme Name:
+Theme URI:
+Description:
 Author:             David López
 Author URI:         http://www.davidlpz.com
 Version:            1.0
 */
+
+*{
+	-moz-box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	box-sizing:border-box;
+}
+body{
+	font-size:62.5%;
+	line-height:1em;
+	-webkit-text-size-adjust:100%;
+	-ms-text-size-adjust:100%;
+}
+
+/* Clearfix
+-------------------------------------------------------------- */
+
+.clearfix:before,
+.clearfix:after{
+	content:"";
+	display:table;
+}
+.clearfix:after{
+	clear:both;
+}
+.clearfix{
+	zoom:1;
+}
+
+/* Img alignment
+-------------------------------------------------------------- */
+
+.alignleft {
+	display:inline;
+	float:left;
+	margin-right:1.5em;
+}
+.alignright {
+	display:inline;
+	float:right;
+	margin-left:1.5em;
+}
+.aligncenter {
+	clear:both;
+	display:block;
+	margin:0 auto;
+}

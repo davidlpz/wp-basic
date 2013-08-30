@@ -59,6 +59,13 @@ function theme_scripts() {
 }
 add_action( 'wp_enqueue_scripts', 'theme_scripts' );
 
+/**
+ * Get current url
+ */
+function current_url() {
+	global $wp;
+	return add_query_arg( $wp->query_string, '', home_url( $wp->request ) );
+}
 
 /**
  * Remove words with less than 3 characteres
@@ -107,17 +114,19 @@ add_filter( 'wp_title', 'theme_wp_title', 10, 2 );
  */
 function pagination() {
 	global $wp_query;
-    $total_pages = $wp_query->max_num_pages;
+	$total_pages = $wp_query->max_num_pages;
 
 	if ($total_pages > 1) {
-	    $big = 99999999;
+		$big = 99999999;
 		$list = paginate_links(array(
 			'base' => str_replace($big, '%#%', get_pagenum_link($big)),
 			'format' => 'page/%#%/',
 			'current' => max(1, get_query_var('paged')),
 			'total' => $total_pages,
 			'prev_next' => true,
-			'type' => 'list'
+			'type' => 'list',
+			'prev_text' => __('«'),
+			'next_text' => __('»')
 		));
 		echo $list;
 	}
