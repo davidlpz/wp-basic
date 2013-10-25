@@ -33,6 +33,9 @@ if ( ! function_exists( 'theme_setup' ) ) :
 
 		// Enable support for Post thumbnails
 		add_theme_support( 'post-thumbnails' );
+
+		// Enable support for custom menus
+		add_theme_support( 'menus' );
 	}
 endif;
 add_action( 'after_setup_theme', 'theme_setup' );
@@ -91,11 +94,6 @@ function theme_wp_title( $title, $sep ) {
 
 	// Blog name
 	$title .= get_bloginfo( 'name' );
-
-	// Add the blog description for the home/front page.
-	$info = get_bloginfo( 'description', 'display' );
-	if ( $info && ( is_home() || is_front_page() ) )
-		$title .= " $sep $info";
 
 	// Add a page number if necessary:
 	if ( $paged >= 2 || $page >= 2 )

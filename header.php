@@ -2,8 +2,8 @@
 <html <?php language_attributes(); ?>>
 <head>
 <meta charset="<?php bloginfo( 'charset' ); ?>" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<meta name="viewport" content="width=device-width" />
+<meta name="description" content="<?php bloginfo('description'); ?>" />
 <title><?php wp_title( '|', true, 'right' ); ?></title>
 <link rel="profile" href="http://gmpg.org/xfn/11" />
 <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>" />
@@ -17,16 +17,15 @@
 <body <?php body_class(); ?>>
 
 <div id="wrapper" class="hfeed">
-	
+
 	<?php do_action( 'before' ); ?>
 
 	<header class="header" role="banner">
 
-		<div>
-			<a class="logo" href="<?php echo  home_url( '/' ); ?>" 
-				title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home"></a>
-		</div>
-		
+		<h1>
+			<a class="logo" href="<?php echo  home_url( '/' ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home"></a>
+		</h1>
+
 		<nav class="nav" role="navigation">
 			<ul>
 				<li><a href="<?php echo home_url( '/' ); ?>">Home</a></li>
