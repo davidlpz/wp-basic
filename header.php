@@ -23,19 +23,13 @@
 	<header class="header" role="banner">
 
 		<h1>
-			<a class="logo" href="<?php echo  home_url( '/' ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home"></a>
+			<a class="logo" href="<?php echo home_url( '/' ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home"></a>
 		</h1>
 
 		<nav class="nav" role="navigation">
-			<ul>
-				<li><a href="<?php echo home_url( '/' ); ?>">Home</a></li>
-				<li><a href="<?php echo home_url( '/' ); ?>about/">About</a></li>
-				<li><a href="<?php echo home_url( '/' ); ?>contact/">Contact</a></li>
-			</ul>
+			<?php wp_nav_menu(array('container' => false)); ?>
 		</nav>
 
-		<aside id="search" role="complementary">
-			<?php get_search_form(); ?>
-		</aside>
+		<?php get_search_form(); ?>
 
 	</header>
