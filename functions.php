@@ -44,8 +44,7 @@ add_action( 'after_setup_theme', 'theme_setup' );
  * Enqueue scripts and styles
  */
 function theme_scripts() {
-	wp_register_style('normalize', get_template_directory_uri() . '/css/normalize.css', false, '2.1.2', 'all');
-	wp_register_style('theme_style', get_stylesheet_uri(), array( 'normalize' ), null);
+	wp_register_style('theme_style', get_stylesheet_uri(), array(), null);
 	wp_enqueue_style('theme_style');
 
 	// Load jQuery from Google CDN
