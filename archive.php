@@ -2,13 +2,20 @@
 
 	<section id="main" role="main">
 
-		<header class="entry-header">
+		<header class="archive-header">
 
-			<h1 class="entry-title">
+			<h1 class="archive-title">
 				<?php
-					if ( is_category() ) : single_cat_title();
+					if ( is_category() ) :
+						printf( __( 'Category: %s' ), '<span>' . single_cat_title('',false) . '</span>' );
 
-					elseif ( is_tag() ) : single_tag_title();
+					elseif ( is_tag() ) :
+						printf( __( 'Tag: %s' ), '<span>' . single_tag_title('',false) . '</span>' );
+
+					elseif ( is_author() ) :
+						the_post();
+						printf( __( 'Author: %s' ), '<span>' . get_the_author() . '</span>' );
+						rewind_posts();
 
 					elseif ( is_day() ) :
 						printf( __( 'Day: %s' ), '<span>' . get_the_date() . '</span>' );
@@ -18,9 +25,6 @@
 
 					elseif ( is_year() ) :
 						printf( __( 'Year: %s' ), '<span>' . get_the_date( 'Y' ) . '</span>' );
-
-					else :
-						_e( 'Archives' );
 
 					endif;
 				?>
