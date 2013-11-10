@@ -83,7 +83,7 @@ function remove_short_words($slug) {
 add_filter('sanitize_title', 'remove_short_words');
 
 /**
- * Filters wp_title to print a <title> tag based on what is being viewed.
+ * Filters wp_title to print a <title> tag based on what is being viewed
  */
 function theme_wp_title( $title, $sep ) {
 
@@ -101,6 +101,28 @@ function theme_wp_title( $title, $sep ) {
 	return $title;
 }
 add_filter( 'wp_title', 'theme_wp_title', 10, 2 );
+
+/**
+ * Integrate facebook opengraph
+ */
+function insert_fb_in_head(){
+global $post;
+if (is_single()) { ?>
+<meta property="og:url" content="<?php the_permalink() ?>"/>
+<meta property="og:title" content="<?php single_post_title(''); ?>" />
+<meta property="og:description" content="<?php echo strip_tags(get_the_excerpt($post->ID)); ?>" />
+<meta property="og:type" content="article" />
+<meta property="og:image" content="<?php if (has_post_thumbnail($post->ID)) { echo wp_get_attachment_url( get_post_thumbnail_id( $post->ID ) ); } else { echo get_template_directory_uri() . '/img/logo.png'; } ?>" />
+<?php } else { ?>
+<meta property="og:url" content="<?php echo home_url( '/' ); ?>"/>
+<meta property="og:site_name" content="<?php bloginfo('name'); ?>" />
+<meta property="og:title" content="<?php bloginfo('name'); ?>" />
+<meta property="og:description" content="<?php bloginfo('description'); ?>" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="<?php echo get_template_directory_uri(); ?>/img/logo.png" />
+<?php }
+}
+add_action( 'wp_head', 'insert_fb_in_head');
 
 /**
  * Custom excerpt

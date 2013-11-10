@@ -71,8 +71,7 @@ em, i{
 	font-style:italic;
 }
 
-/* Clearfix
--------------------------------------------------------------- */
+/* Clearfix */
 
 .clearfix:before,
 .clearfix:after{
@@ -86,8 +85,7 @@ em, i{
 	zoom:1;
 }
 
-/* Img alignment
--------------------------------------------------------------- */
+/* Post img alignment */
 
 .alignleft {
 	display:inline;
