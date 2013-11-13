@@ -7,24 +7,24 @@
 			<h1 class="archive-title">
 				<?php
 					if ( is_category() ) :
-						printf( __( 'Category: %s' ), '<span>' . single_cat_title('',false) . '</span>' );
+						printf('Category: %s', single_cat_title('',false));
 
 					elseif ( is_tag() ) :
-						printf( __( 'Tag: %s' ), '<span>' . single_tag_title('',false) . '</span>' );
+						printf('Tag: %s', single_tag_title('',false));
 
 					elseif ( is_author() ) :
 						the_post();
-						printf( __( 'Author: %s' ), '<span>' . get_the_author() . '</span>' );
+						printf('Author: %s', get_the_author());
 						rewind_posts();
 
 					elseif ( is_day() ) :
-						printf( __( 'Day: %s' ), '<span>' . get_the_date() . '</span>' );
+						printf('Day: %s', get_the_date());
 
 					elseif ( is_month() ) :
-						printf( __( 'Month: %s' ), '<span>' . get_the_date( 'F Y' ) . '</span>' );
+						printf('Month: %s', get_the_date( 'F Y' ));
 
 					elseif ( is_year() ) :
-						printf( __( 'Year: %s' ), '<span>' . get_the_date( 'Y' ) . '</span>' );
+						printf('Year: %s', get_the_date( 'Y' ));
 
 					endif;
 				?>
