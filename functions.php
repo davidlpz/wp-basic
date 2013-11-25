@@ -15,7 +15,7 @@ function wp_head_cleanup() {
 	remove_action( 'wp_head', 'parent_post_rel_link', 10, 0 );
 	// Remove relational links for the posts adjacent to the current post.
 	remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0);
-	 // Remove XHTML generator that is generated on the wp_head hook, WP version
+	// Remove XHTML generator that is generated on the wp_head hook, WP version
 	remove_action( 'wp_head', 'wp_generator' );
 	// Recent comments sidebar widget inline css
 	global $wp_widget_factory;
@@ -199,5 +199,27 @@ function do_ajax(){
 }
 add_action('wp_ajax_nopriv_do_ajax', 'do_ajax');
 add_action('wp_ajax_do_ajax', 'do_ajax');
+
+/**
+ * Integrate facebook opengraph
+ */
+function insert_fb_in_head(){
+global $post;
+if (is_single()) { ?>
+<meta property="og:url" content="<?php the_permalink() ?>"/>
+<meta property="og:title" content="<?php single_post_title(''); ?>" />
+<meta property="og:description" content="<?php echo strip_tags(get_the_excerpt($post->ID)); ?>" />
+<meta property="og:type" content="article" />
+<meta property="og:image" content="<?php if (has_post_thumbnail($post->ID)) { echo wp_get_attachment_url( get_post_thumbnail_id( $post->ID ) ); } else { echo get_template_directory_uri() . '/img/logo.png'; } ?>" />
+<?php } else { ?>
+<meta property="og:url" content="<?php echo home_url( '/' ); ?>"/>
+<meta property="og:site_name" content="<?php bloginfo('name'); ?>" />
+<meta property="og:title" content="<?php bloginfo('name'); ?>" />
+<meta property="og:description" content="<?php bloginfo('description'); ?>" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="<?php echo get_template_directory_uri(); ?>/img/logo.png" />
+<?php }
+}
+add_action( 'wp_head', 'insert_fb_in_head');
 
 ?>
