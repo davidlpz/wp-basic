@@ -191,16 +191,6 @@ function enable_threaded_comments(){
 add_action('get_header', 'enable_threaded_comments');
 
 /**
- * Ajax method
- */
-function do_ajax(){
-	global $post;
-	die();
-}
-add_action('wp_ajax_nopriv_do_ajax', 'do_ajax');
-add_action('wp_ajax_do_ajax', 'do_ajax');
-
-/**
  * Integrate facebook opengraph
  */
 function insert_fb_in_head(){
@@ -221,5 +211,15 @@ if (is_single()) { ?>
 <?php }
 }
 add_action( 'wp_head', 'insert_fb_in_head');
+
+/**
+ * Ajax method
+ */
+function do_ajax(){
+	global $post;
+	die();
+}
+add_action('wp_ajax_nopriv_do_ajax', 'do_ajax');
+add_action('wp_ajax_do_ajax', 'do_ajax');
 
 ?>

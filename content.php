@@ -19,9 +19,9 @@ global $length;
 
 	<header class="entry-header">
 
-		<h2 class="entry-title">
+		<h1 class="entry-title">
 			<a href="<?php the_permalink(); ?>" title="<?php the_title(); ?>" rel="bookmark"><?php the_title(); ?></a>
-		</h2>
+		</h1>
 
 		<div class="meta">
 			<span class="date"><?php the_time('j/m/Y'); ?></span>
