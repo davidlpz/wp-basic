@@ -2,13 +2,21 @@
 
 	<section id="main" role="main">
 
-		<?php while (have_posts()) : the_post(); ?>
+	<?php while (have_posts()) : the_post(); ?>
 
-			<?php get_template_part( 'content', 'page' ); ?>
+		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 
-			<?php if (comments_open()) comments_template(); ?>
+			<header class="entry-header">
 
-		<?php endwhile; ?>
+				<h1 class="entry-title"><?php the_title(); ?></h1>
+
+			</header>
+
+			<div class="entry-content"><?php the_content(); ?></div>
+
+		</article>
+
+	<?php endwhile; ?>
 
 	</section>
 

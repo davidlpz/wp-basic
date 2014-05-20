@@ -1,8 +1,8 @@
-<article class="not-found">
+<article <?php post_class('not-found'); ?>>
 
 	<header class="entry-header">
 
-		<h1 class="entry-title"><?php _e( 'Sorry, nothing to display.' ); ?></h1>
+		<h1 class="entry-title">Sorry, nothing to display.</h1>
 
 	</header>
 

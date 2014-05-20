@@ -6,9 +6,7 @@
 
 			<header class="entry-header">
 
-				<h1 class="entry-title">
-					<?php _e( 'Page not found' ); ?>
-				</h1>
+				<h1 class="entry-title">Page not found</h1>
 
 			</header>
 
