@@ -1,6 +1,5 @@
 <?php
 
-add_action('init', 'wp_head_cleanup');
 function wp_head_cleanup() {
 	// Remove link to the Really Simple Discovery service endpoint, EditURI link
 	remove_action( 'wp_head', 'rsd_link' );
@@ -25,8 +24,8 @@ function wp_head_cleanup() {
 		'recent_comments_style'
 	));
 }
+add_action('init', 'wp_head_cleanup');
 
-add_action( 'after_setup_theme', 'theme_setup' );
 if ( ! function_exists( 'theme_setup' ) ) :
 	function theme_setup() {
 		// Add default posts and comments RSS feed links to head
@@ -39,11 +38,11 @@ if ( ! function_exists( 'theme_setup' ) ) :
 		add_theme_support( 'menus' );
 	}
 endif;
+add_action( 'after_setup_theme', 'theme_setup' );
 
 /**
  * Enqueue scripts and styles
  */
-add_action( 'wp_enqueue_scripts', 'theme_scripts' );
 function theme_scripts() {
 	wp_register_style('theme_style', get_stylesheet_uri(), array(), null);
 	wp_enqueue_style('theme_style');
@@ -55,9 +54,20 @@ function theme_scripts() {
 		wp_enqueue_script('jquery');
 	}
 
-	wp_register_script('library', get_template_directory_uri() . '/js/library.js', false, null, true);
-	wp_enqueue_script('library');
+	wp_register_script('main', get_template_directory_uri() . '/js/main.js', false, null, true);
+	wp_enqueue_script('main');
 }
+add_action( 'wp_enqueue_scripts', 'theme_scripts' );
+
+/**
+ * Add IE conditional HTML5 shim to header
+ */
+function add_ie_html5_shiv() {
+	echo '<!--[if lt IE 9]>';
+	echo '<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>';
+	echo '<![endif]-->';
+}
+add_action('wp_head', 'add_ie_html5_shiv');
 
 /**
  * Filters wp_title to print a <title> tag based on what is being viewed
@@ -80,14 +90,13 @@ function theme_wp_title( $title, $sep ) {
 }
 
 /**
- * Integrate opengraph
+ * Integrate facebook opengraph
  */
-add_action( 'wp_head', 'insert_opengraph_in_head');
-function insert_opengraph_in_head(){
+function insert_fb_in_head(){
 global $post;
 if (is_single()) { ?>
 <!-- Google Authorship and Publisher Markup -->
-<link rel="publisher" href="https://plus.google.com/+profile/posts"/>
+<link rel="author" href=""/>
 <!-- Schema.org markup for Google+ -->
 <meta itemprop="name" content="<?php single_post_title(''); ?>">
 <meta itemprop="description" content="<?php echo strip_tags(get_the_excerpt($post->ID)); ?>">
@@ -101,7 +110,7 @@ if (is_single()) { ?>
 <meta property="og:site_name" content="<?php bloginfo('name'); ?>" />
 <?php } else { ?>
 <!-- Google Authorship and Publisher Markup -->
-<link rel="publisher" href="https://plus.google.com/+profile/posts"/>
+<link rel="author" href=""/>
 <!-- Schema.org markup for Google+ -->
 <meta itemprop="name" content="<?php bloginfo('name'); ?>">
 <meta itemprop="description" content="<?php bloginfo('description'); ?>">
@@ -115,19 +124,20 @@ if (is_single()) { ?>
 <meta property="og:site_name" content="<?php bloginfo('name'); ?>" />
 <?php }
 }
+add_action( 'wp_head', 'insert_fb_in_head');
 
 /**
  * Add class to the next and previous buttons
  */
-add_filter('next_posts_link_attributes', 'posts_next_attributes');
 function posts_next_attributes() {
     return 'class="next"';
 }
+add_filter('next_posts_link_attributes', 'posts_next_attributes');
 
-add_filter('previous_posts_link_attributes', 'posts_previous_attributes');
 function posts_previous_attributes() {
 	return 'class="previous"';
 }
+add_filter('previous_posts_link_attributes', 'posts_previous_attributes');
 
 /**
  * Add pagination
@@ -155,74 +165,12 @@ function pagination($prev_next = false) {
 /**
  * Enable threaded comments
  */
-add_action('get_header', 'enable_threaded_comments');
 function enable_threaded_comments(){
 	if (is_singular() AND comments_open() AND (get_option('thread_comments'))) {
 		wp_enqueue_script('comment-reply');
 	}
 }
+add_action('get_header', 'enable_threaded_comments');
 
-
-/**
- * Integrate facebook opengraph
- */
-add_action( 'wp_head', 'insert_fb_in_head');
-function insert_fb_in_head(){
-global $post;
-if (is_single()) { ?>
-<!-- Google Authorship and Publisher Markup -->
-<link rel="author" href="https://plus.google.com/+Hailpopweb/posts"/>
-<!-- Schema.org markup for Google+ -->
-<meta itemprop="name" content="<?php single_post_title(''); ?>">
-<meta itemprop="description" content="<?php echo strip_tags(get_the_excerpt($post->ID)); ?>">
-<meta itemprop="image" content="<?php if (has_post_thumbnail($post->ID)) { echo wp_get_attachment_url( get_post_thumbnail_id( $post->ID ) ); } else { echo get_template_directory_uri() . '/img/logo.png'; } ?>">
-<!-- Open Graph data -->
-<meta property="og:title" content="<?php single_post_title(''); ?>" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="<?php the_permalink() ?>"/>
-<meta property="og:image" content="<?php if (has_post_thumbnail($post->ID)) { echo wp_get_attachment_url( get_post_thumbnail_id( $post->ID ) ); } else { echo get_template_directory_uri() . '/img/logo.png'; } ?>" />
-<meta property="og:description" content="<?php echo strip_tags(get_the_excerpt($post->ID)); ?>" />
-<meta property="og:site_name" content="<?php bloginfo('name'); ?>" />
-<?php } else { ?>
-<!-- Google Authorship and Publisher Markup -->
-<link rel="author" href="https://plus.google.com/+Hailpopweb/posts"/>
-<!-- Schema.org markup for Google+ -->
-<meta itemprop="name" content="<?php bloginfo('name'); ?>">
-<meta itemprop="description" content="<?php bloginfo('description'); ?>">
-<meta itemprop="image" content="<?php echo get_template_directory_uri(); ?>/img/logo.png">
-<!-- Open Graph data -->
-<meta property="og:title" content="<?php bloginfo('name'); ?>" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="<?php echo home_url( '/' ); ?>"/>
-<meta property="og:image" content="<?php echo get_template_directory_uri(); ?>/img/logo.png" />
-<meta property="og:description" content="<?php bloginfo('description'); ?>" />
-<meta property="og:site_name" content="<?php bloginfo('name'); ?>" />
-<?php }
-}
-
-/**
- * Disable WordPress sanitization to allow more than just $allowedtags in the author bio
- */
-remove_filter('pre_user_description', 'wp_filter_kses');
-add_filter('pre_user_description', 'wp_filter_post_kses');
-
-/**
- * Increase custom fields limit
- */
-add_filter( 'postmeta_form_limit' , 'customfield_limit_increase' );
-function customfield_limit_increase( $limit ) {
-    $limit = 100;
-    return $limit;
-}
-
-/**
- * Ajax method
- */
-add_action('wp_ajax_nopriv_do_ajax', 'do_ajax');
-add_action('wp_ajax_do_ajax', 'do_ajax');
-function do_ajax(){
-	global $post;
-	die();
-}
 
 ?>
