@@ -8,7 +8,7 @@
 
 			<header class="entry-header">
 
-				<h1 class="entry-title"><?php the_title(); ?></h1>
+				<?php the_title('<h1 class="entry-title">', '</h1>'); ?>
 
 			</header>
 

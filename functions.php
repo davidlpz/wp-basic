@@ -1,31 +1,43 @@
 <?php
 
-function wp_head_cleanup() {
-	// Remove link to the Really Simple Discovery service endpoint, EditURI link
-	remove_action( 'wp_head', 'rsd_link' );
-	// Remove link to the Windows Live Writer manifest file
-	remove_action( 'wp_head', 'wlwmanifest_link' );
-	// Remove index link
-	remove_action( 'wp_head', 'index_rel_link' );
-	// Remove short link
-	remove_action( 'wp_head', 'wp_shortlink_wp_head', 10, 0 );
-	// Remove start link
-	remove_action( 'wp_head', 'start_post_rel_link', 10, 0 );
-	// Remove prev link
-	remove_action( 'wp_head', 'parent_post_rel_link', 10, 0 );
-	// Remove relational links for the posts adjacent to the current post.
-	remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0);
-	// Remove XHTML generator that is generated on the wp_head hook, WP version
-	remove_action( 'wp_head', 'wp_generator' );
-	// Recent comments sidebar widget inline css
-	global $wp_widget_factory;
-	remove_action('wp_head', array(
-		$wp_widget_factory->widgets['WP_Widget_Recent_Comments'],
-		'recent_comments_style'
-	));
-}
-add_action('init', 'wp_head_cleanup');
+require get_template_directory() . '/inc/customizer.php';
 
+add_action('init', 'wp_head_cleanup');
+function wp_head_cleanup(){
+	add_filter('show_admin_bar','__return_false');
+	// Remove comments feed
+	// Remove link to the Really Simple Discovery service endpoint, EditURI link
+	remove_action('wp_head', 'rsd_link');
+	// Remove XHTML generator that is generated on the wp_head hook, WP version
+	remove_action('wp_head', 'wp_generator');
+	// remove link to index page
+	remove_action('wp_head', 'index_rel_link');
+	// Remove link to the Windows Live Writer manifest file
+	remove_action('wp_head', 'wlwmanifest_link');
+	// Remove short link
+	remove_action('wp_head', 'wp_shortlink_wp_head', 10, 0);
+	// Remove start link
+	remove_action('wp_head', 'start_post_rel_link', 10, 0);
+	// Remove prev link
+	remove_action('wp_head', 'parent_post_rel_link', 10, 0);
+	// Remove relational links for the posts adjacent to the current post
+	remove_action('wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0);
+	// Remove the new WordPress Emoji support
+	remove_action('wp_head', 'print_emoji_detection_script', 7);
+	remove_action('wp_print_styles', 'print_emoji_styles');
+	// Turn off oEmbed auto discovery.
+	// Don't filter oEmbed results.
+	remove_filter('oembed_dataparse', 'wp_filter_oembed_result', 10);
+	// Remove oEmbed discovery links.
+	remove_action('wp_head', 'wp_oembed_add_discovery_links');
+	// Remove oEmbed-specific JavaScript from the front-end and back-end.
+	remove_action('wp_head', 'wp_oembed_add_host_js');
+	// Remove the REST API
+	remove_action('wp_head', 'rest_output_link_wp_head', 10);
+	// Remove the dns-prefetch code
+	remove_action('wp_head', 'wp_resource_hints', 2);
+}
+add_action( 'after_setup_theme', 'theme_setup' );
 if ( ! function_exists( 'theme_setup' ) ) :
 	function theme_setup() {
 		// Add default posts and comments RSS feed links to head
@@ -38,52 +50,30 @@ if ( ! function_exists( 'theme_setup' ) ) :
 		add_theme_support( 'menus' );
 	}
 endif;
-add_action( 'after_setup_theme', 'theme_setup' );
 
 /**
  * Enqueue scripts and styles
  */
+add_action( 'wp_enqueue_scripts', 'theme_scripts' );
 function theme_scripts() {
 	wp_register_style('theme_style', get_stylesheet_uri(), array(), null);
 	wp_enqueue_style('theme_style');
 
-	// Load jQuery from Google CDN
-	if (!is_admin()) {
-		wp_deregister_script('jquery');
-		wp_register_script('jquery', "http" . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . "://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js", false, null, true);
-		wp_enqueue_script('jquery');
-	}
-
 	wp_register_script('main', get_template_directory_uri() . '/js/main.js', false, null, true);
 	wp_enqueue_script('main');
 }
-add_action( 'wp_enqueue_scripts', 'theme_scripts' );
-
-/**
- * Add IE conditional HTML5 shim to header
- */
-function add_ie_html5_shiv() {
-	echo '<!--[if lt IE 9]>';
-	echo '<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>';
-	echo '<![endif]-->';
-}
-add_action('wp_head', 'add_ie_html5_shiv');
 
 /**
  * Filters wp_title to print a <title> tag based on what is being viewed
  */
 add_filter( 'wp_title', 'theme_wp_title', 10, 2 );
 function theme_wp_title( $title, $sep ) {
-
 	global $page, $paged;
-
-	if ( is_feed() ) return $title;
-
+	if (is_feed()) return $title;
 	// Blog name
 	$title .= get_bloginfo( 'name' );
-
 	// Add a page number if necessary:
-	if ( $paged >= 2 || $page >= 2 )
+	if ($paged >= 2 || $page >= 2  && ! is_404())
 		$title .= " $sep " . sprintf( __( 'Page %s' ), max( $paged, $page ) );
 
 	return $title;
@@ -92,6 +82,7 @@ function theme_wp_title( $title, $sep ) {
 /**
  * Integrate facebook opengraph
  */
+add_action( 'wp_head', 'insert_fb_in_head');
 function insert_fb_in_head(){
 global $post;
 if (is_single()) { ?>
@@ -124,20 +115,30 @@ if (is_single()) { ?>
 <meta property="og:site_name" content="<?php bloginfo('name'); ?>" />
 <?php }
 }
-add_action( 'wp_head', 'insert_fb_in_head');
+
+/**
+ * Add google analytics code before </head>
+ */
+add_action('wp_head', 'add_google_analytics');
+function add_google_analytics() {
+	if ($code = get_theme_mod('analytics_code')){
+		echo $code;
+	}
+}
+
 
 /**
  * Add class to the next and previous buttons
  */
+add_filter('next_posts_link_attributes', 'posts_next_attributes');
 function posts_next_attributes() {
     return 'class="next"';
 }
-add_filter('next_posts_link_attributes', 'posts_next_attributes');
 
+add_filter('previous_posts_link_attributes', 'posts_previous_attributes');
 function posts_previous_attributes() {
 	return 'class="previous"';
 }
-add_filter('previous_posts_link_attributes', 'posts_previous_attributes');
 
 /**
  * Add pagination
@@ -163,14 +164,16 @@ function pagination($prev_next = false) {
 }
 
 /**
- * Enable threaded comments
+ * Minify the output
  */
-function enable_threaded_comments(){
-	if (is_singular() AND comments_open() AND (get_option('thread_comments'))) {
-		wp_enqueue_script('comment-reply');
+if (!is_admin()){
+	function minify_output($buffer){
+		$search = array('/\>[^\S ]+/s','/[^\S ]+\</s','/(\s)+/s');
+		$replace = array('>','<','\\1');
+		if (preg_match("/\<html/i",$buffer) == 1 && preg_match("/\<\/html\>/i",$buffer) == 1) {
+			$buffer = preg_replace($search, $replace, $buffer);
+		}
+		return $buffer;
 	}
+	ob_start('minify_output');
 }
-add_action('get_header', 'enable_threaded_comments');
-
-
-?>

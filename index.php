@@ -14,7 +14,7 @@
 
 		<?php else: ?>
 
-			<?php get_template_part('no-results'); ?>
+			<h1 class="entry-title">Sorry, nothing to display.</h1>
 
 		<?php endif; ?>
 

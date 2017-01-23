@@ -8,9 +8,7 @@
 
 	<header class="entry-header">
 
-		<h1 class="entry-title">
-			<a href="<?php the_permalink(); ?>" title="<?php the_title(); ?>" rel="bookmark"><?php the_title(); ?></a>
-		</h1>
+		<?php the_title('<h2 class="entry-title"><a href="' . esc_url(get_permalink()) . '" rel="bookmark">', '</a></h2>'); ?>
 
 		<div class="meta">
 			<span class="date updated"><?php the_time('j/F/Y'); ?></span>

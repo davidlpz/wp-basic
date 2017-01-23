@@ -29,12 +29,11 @@ nav, section, summary, mark, audio, video{
 	vertical-align:baseline;
 }
 *{
-	-moz-box-sizing:border-box;
 	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
 	box-sizing:border-box;
 }
 body{
-	font-size:62.5%;
 	line-height:1;
 	-webkit-text-size-adjust:100%;
 	-ms-text-size-adjust:100%;
@@ -99,6 +98,15 @@ input[type="search"]::-webkit-search-results-decoration{
 /* Index
 -------------------------------------------------------------- */
 
+ul.page-numbers{
+	display:block;
+	text-align:center;
+	margin:1em 0;
+}
+.page-numbers li{
+	display:inline-block;
+	margin:0 0.25em;
+}
 
 
 /* Single
